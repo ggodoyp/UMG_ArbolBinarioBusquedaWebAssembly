@@ -1,0 +1,98 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+@using ArbolBinarioBusquedaWebAssembly
+
+<h3>Árbol Binario de Búsqueda</h3>
+
+<input type="number" @bind="nuevoValor" placeholder="Valor a insertar" />
+<button @onclick="Insertar">Insertar</button>
+
+<input type="number" @bind="valorBuscar" placeholder="Buscar" />
+<button @onclick="Buscar">Buscar</button>
+<p>@mensajeBuscar</p>
+
+<input type="number" @bind="valorEliminar" placeholder="Eliminar" />
+<button @onclick="Eliminar">Eliminar</button>
+<p>@mensajeEliminar</p>
+
+<h4>Recorridos</h4>
+<button @onclick="MostrarRecorridos">Mostrar</button>
+<p><b>InOrden:</b> @inOrden</p>
+<p><b>PreOrden:</b> @preOrden</p>
+<p><b>PostOrden:</b> @postOrden</p>
+
+<h4>Visualización del Árbol</h4>
+<div>@((MarkupString)arbol.ObtenerHtmlDelArbol())</div>
+
+
+@code {
+    ArbolBinario arbol = new();
+    int nuevoValor, valorBuscar, valorEliminar;
+    string mensajeBuscar, mensajeEliminar;
+    string inOrden, preOrden, postOrden;
+    string htmlArbol = "";
+
+    void Insertar()
+    {
+        arbol.Insertar(nuevoValor);
+        ActualizarArbol();
+    }
+
+    void Buscar()
+    {
+        bool encontrado = arbol.Buscar(valorBuscar);
+        mensajeBuscar = encontrado ? $"El valor {valorBuscar} fue encontrado." : "No encontrado.";
+    }
+
+    void Eliminar()
+    {
+        arbol.Eliminar(valorEliminar);
+        mensajeEliminar = $"Eliminado: {valorEliminar}";
+        ActualizarArbol();
+    }
+
+    void MostrarRecorridos()
+    {
+        inOrden = arbol.GetInOrden();
+        preOrden = arbol.GetPreOrden();
+        postOrden = arbol.GetPostOrden();
+    }
+
+    void ActualizarArbol()
+    {
+        htmlArbol = arbol.ObtenerHtmlDelArbol();
+    }
+}
+
+<style>
+    .arbol-container ul {
+        list-style-type: none;
+        position: relative;
+        padding-left: 1em;
+        margin: 0;
+    }
+
+    .arbol-container ul ul::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0.5em;
+        width: 0;
+        height: 100%;
+        border-left: 1px solid black;
+    }
+
+    .arbol-container li {
+        margin-left: 1em;
+        padding: 0.5em;
+        border: 1px solid #ccc;
+        display: inline-block;
+        text-align: center;
+        min-width: 30px;
+        border-radius: 5px;
+    }
+</style>
+
+  
